@@ -67,7 +67,7 @@ def Arvo_Kaupunki():
 
 
 def Arvo_Mies():
-    arvonta = random.randint(1, 2663203)
+    arvonta = random.randint(1, 2_663_203)
     for X in Mieslista:
         if arvonta <= int(X[2]):
             KNimi = X[0]

@@ -4,7 +4,7 @@ import puputin as pt
 
 class test_puputin(unittest.TestCase):
     def test_puptinluonti(self):
-        tp = pt.puputin("testipuputin")
+        tp = pt.Puputin("testipuputin")
         self.assertEqual(tp.nimi, "testipuputin", "Nimi property ei toimi")
 
     def test_lisaapuppu(self):
