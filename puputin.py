@@ -3,10 +3,10 @@ import random
 
 
 class Puputin:
-    _puput = list()
-
     def __init__(self, nimi):
         self._nimi = nimi
+        self._puput = list()
+        self._arvottujoukko = pd.DataFrame()
 
     @property
     def nimi(self):
@@ -16,39 +16,80 @@ class Puputin:
     def nimi(self, nimi):
         self._nimi = nimi
 
-    def uusipuppu(self, puppu, *args, **kwargs):
+    def uusipuppu(self, puppu, tulostetaan, **kwargs):
         if not isinstance(puppu, pd.DataFrame):
-            raise TypeError("Syön Vain pndas dataframeja")
+            raise TypeError("Syön Vain pandas dataframeja")
 
         # pupun mussutus
-        data["indeksi"] = data.index.values.astype(int)
+        puppu["indeksi"] = puppu.index.values.astype(int)
         if "frekvenssi" in kwargs:
-            puppu["kumulatiivinensumma"] = data[int(kwargs["frekvenssi"])].cumsum()
+            puppu["kumulatiivinensumma"] = puppu[int(kwargs["frekvenssi"])].cumsum()
         else:
-            data["kumulatiivinensumma"] = data.index.values.astype(int)
+            puppu["kumulatiivinensumma"] = puppu.index.values.astype(int)
+        self._puput.append([puppu, tulostetaan])
 
-        tulostetaan = list(args)
+    def luopuppu(self, monta: int = 1):
+        lista = list()
+        rivi = list()
+        for _ in range(monta):
+            for puppu in self._puput:
+                arpa = random.randint(0, puppu[0]["kumulatiivinensumma"].iloc[-1])
+                yksi = (
+                    puppu[0][puppu[0]["kumulatiivinensumma"] >= arpa]
+                    .iloc[0:1, puppu[1]]
+                    .values.tolist()
+                )
+                for solu in yksi:
+                    rivi += solu
+            lista.append(rivi)
+            rivi = list()
+        self._arvottujoukko = pd.DataFrame(lista)
 
-        puppu.__setattr__("tulostetaan", args)
-        self._puput.append(puppu)
-
-    def annapuppu(self, monta: int = 1):
-        # for i in range(1):
-        print(datasetti.__getattr__("tulostetaan"))
-        print(self._puput[0].__getattr__("tulostetaan"))
-        datasetti = self._puput[0]
-        arpa = random.randint(0, self._puput[0]["kumulatiivinensumma"].iloc[-1])
-        return datasetti[datasetti["kumulatiivinensumma"] >= arpa].iloc[0:1, [0, 1, 2]]
+    def annapuppu(self, monta):
+        return self._arvottujoukko.sample(monta)
 
 
 if __name__ == "__main__":
     puppu = Puputin("testi")
     puppu2 = Puputin("testi")
-    data = pd.read_csv(
+
+    naisnimet = pd.read_csv(
+        "tekstit\\naisnimet.txt", sep=",", header=None, encoding="ISO-8859-1"
+    )
+
+    miesnimet = pd.read_csv(
         "tekstit\\miesnimet.txt", sep=",", header=None, encoding="ISO-8859-1"
     )
-    puppu.uusipuppu(data, [0, 1, 2])
-    print(puppu.annapuppu())
-    puppu2.uusipuppu(data, [0, 1, 2], frekvenssi=1)
-    print(puppu2.annapuppu())
+    kaupungit = pd.read_csv(
+        "tekstit\\kaupungit.txt", sep=",", header=None, encoding="ISO-8859-1"
+    )
+    kaupungit = pd.read_csv(
+        "tekstit\\kaupungit.txt", sep=",", header=None, encoding="ISO-8859-1"
+    )
+    sukunimet = pd.read_csv(
+        "tekstit\\sukunimet.txt", sep=",", header=None, encoding="ISO-8859-1"
+    )
+    # print(nykanen)
+    puppu2.uusipuppu(miesnimet, [0], frekvenssi=1)
+    puppu2.uusipuppu(miesnimet, [0], frekvenssi=1)
+    puppu2.uusipuppu(sukunimet, [0], frekvenssi=1)
+    puppu2.uusipuppu(kaupungit, [0], frekvenssi=1)
+    # puppu2.uusipuppu(nykanen, [0])
+
+    puppu.uusipuppu(naisnimet, [0], frekvenssi=1)
+    puppu.uusipuppu(naisnimet, [0], frekvenssi=1)
+    puppu.uusipuppu(sukunimet, [0], frekvenssi=1)
+    puppu.uusipuppu(kaupungit, [0], frekvenssi=1)
+
+    puppu.luopuppu(30)
+    puppu2.luopuppu(30)
+
+    puppu3 = Puputin("naimisissa")
+    naiset = puppu.annapuppu(30)
+    miehet = puppu2.annapuppu(30)
+    puppu3.uusipuppu(naiset, [0, 1, 2, 3, 4])
+    puppu3.uusipuppu(miehet, [0, 1, 2, 3, 4])
+    puppu3.luopuppu(10)
+    naimisissa = puppu3.annapuppu(10)
+    print(naimisissa)
 
