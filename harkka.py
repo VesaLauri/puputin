@@ -5,8 +5,10 @@ data = pd.read_csv(
 )
 print(data)
 
-print(data[1])
-data["jee"] = data.cumsum(axis=1)
+print(data[1] + " " + data["jee"])
+data["jee"] = data[1].cumsum()
+print(data[0])
+data["indeksi"] = data.index.values.astype(int)
 
 # functio joka laskee sen juoksevan summan
 """
