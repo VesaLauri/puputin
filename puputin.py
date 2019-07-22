@@ -45,8 +45,8 @@ class Puputin:
             rivi = list()
         self._arvottujoukko = pd.DataFrame(lista)
 
-    def annapuppu(self, monta):
-        return self._arvottujoukko.sample(monta)
+    def annapuppu(self):
+        return self._arvottujoukko
 
 
 if __name__ == "__main__":
@@ -81,15 +81,17 @@ if __name__ == "__main__":
     puppu.uusipuppu(sukunimet, [0], frekvenssi=1)
     puppu.uusipuppu(kaupungit, [0], frekvenssi=1)
 
-    puppu.luopuppu(30)
-    puppu2.luopuppu(30)
+    puppu.luopuppu(10)
+    puppu2.luopuppu(10)
 
-    puppu3 = Puputin("naimisissa")
-    naiset = puppu.annapuppu(30)
-    miehet = puppu2.annapuppu(30)
-    puppu3.uusipuppu(naiset, [0, 1, 2, 3, 4])
-    puppu3.uusipuppu(miehet, [0, 1, 2, 3, 4])
-    puppu3.luopuppu(10)
-    naimisissa = puppu3.annapuppu(10)
-    print(naimisissa)
+    puppu3 = Puputin("lempinyt")
+    naiset = puppu.annapuppu()
+    miehet = puppu2.annapuppu()
+
+    puppu3.uusipuppu(naiset, [0, 1, 2, 3])
+    puppu3.uusipuppu(miehet, [0, 1, 2, 3])
+    puppu3.uusipuppu(kaupungit, [0], frekvenssi=1)
+    puppu3.luopuppu(1000)
+    lempinyt = puppu3.annapuppu()
+    print(lempinyt)
 
